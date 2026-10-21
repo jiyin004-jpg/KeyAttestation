@@ -39,6 +39,14 @@ public class RootPublicKey {
             ixPvZtXQpUpuL12ab+9EaDK8Z4RHJYYfCT3Q5vNAXaiWQ+8PTWm2QgBR/bkwSWc+\
             NpUFgNPN9PvQi8WEg5UmAGMCAwEAAQ==""";
 
+    // Google 2025-07 启用的 RKP 根，CN=Key Attestation CA1（EC P-384），链上常见形式是
+    // Key Attestation CA1 -> Droid CA2/CA3 -> TEE 证书。公钥取自 Google 官方文档的
+    // "Root Certificates" 一节，和 secp384r1 曲线对得上。
+    private static final String GOOGLE_RKP_ROOT_PUBLIC_KEY = """
+            MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEI9ojcU7fPlsFCjxy6IRqzgeOoK0b+YsV\
+            9FPQywiyw8EQRTkJ9u3qwfnI4DGoSLlBqClTXJfgfCcZvs60FikNMHnu4fkRzObf\
+            gDkU2KNXezT9/RQ+XvNslxPHrHCowhGr""";
+
     private static final String AOSP_ROOT_EC_PUBLIC_KEY = """
             MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE7l1ex+HA220Dpn7mthvsTWpdamgu\
             D/9/SQ59dx9EIm29sa/6FsvHrcV30lacqrewLVQBXT5DKyqO107sSHVBpA==""";
@@ -68,6 +76,7 @@ public class RootPublicKey {
             n2fbQPtpGlNxgEfd6Y8=""";
 
     private static final byte[] googleKey = Base64.decode(GOOGLE_ROOT_PUBLIC_KEY, 0);
+    private static final byte[] googleRkpKey = Base64.decode(GOOGLE_RKP_ROOT_PUBLIC_KEY, 0);
     private static final byte[] aospEcKey = Base64.decode(AOSP_ROOT_EC_PUBLIC_KEY, 0);
     private static final byte[] aospRsaKey = Base64.decode(AOSP_ROOT_RSA_PUBLIC_KEY, 0);
     private static final byte[] knoxSakv1Key = Base64.decode(KNOX_SAKV1_ROOT_PUBLIC_KEY, 0);
@@ -98,7 +107,9 @@ public class RootPublicKey {
             Log.e(AppApplication.TAG, "getOemKeys: ", e);
             return null;
         }
-        set.removeIf(key -> Arrays.equals(key.getEncoded(), googleKey));
+        // 厂商列表里可能也塞了 Google 的根，剔掉免得被当 OEM
+        set.removeIf(key -> Arrays.equals(key.getEncoded(), googleKey)
+                || Arrays.equals(key.getEncoded(), googleRkpKey));
         if (set.isEmpty()) {
             return null;
         }
@@ -109,6 +120,9 @@ public class RootPublicKey {
     public static Status check(byte[] publicKey) {
         if (Arrays.equals(publicKey, googleKey)) {
             return Status.GOOGLE;
+        } else if (Arrays.equals(publicKey, googleRkpKey)) {
+            // 远程预配的钥匙走这条根，跟出厂固化的 GOOGLE 根区分开
+            return Status.GOOGLE_RKP;
         } else if (Arrays.equals(publicKey, aospEcKey)) {
             return Status.AOSP;
         } else if (Arrays.equals(publicKey, aospRsaKey)) {
