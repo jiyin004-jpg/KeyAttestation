@@ -37,6 +37,8 @@
     <string name="google_root_cert_rkp_summary">远程配置的认证密钥有更强的安全性和更高的可用性。</string>
     <string name="knox_root_cert">三星 Knox 认证根证书</string>
     <string name="knox_root_cert_summary">Knox 认证使用三星认证密钥（SAK）签名。</string>
+    <string name="ommega_root_cert">Ommega 硬件证明根证书</string>
+    <string name="ommega_root_cert_summary">由 Ommega 签发的证明密钥使用该根证书签名。</string>
     <string name="oem_root_cert">设备制造商的根证书</string>
     <string name="oem_root_cert_summary">此设备信任该根证书，但它可能不被其它人信任。</string>
 

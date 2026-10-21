@@ -37,6 +37,8 @@
     <string name="google_root_cert_rkp_summary">Remotely provisioned attestation key has stronger security and higher availability.</string>
     <string name="knox_root_cert">Samsung Knox attestation root certificate</string>
     <string name="knox_root_cert_summary">Knox attestation is signed using Samsung attestation key (SAK).</string>
+    <string name="ommega_root_cert">Ommega hardware attestation root certificate</string>
+    <string name="ommega_root_cert_summary">Attestation keys issued by Ommega are signed by this root certificate.</string>
     <string name="oem_root_cert">OEM root certificate</string>
     <string name="oem_root_cert_summary">This device trusts this root certificate, but it may not be trusted by others.</string>
 

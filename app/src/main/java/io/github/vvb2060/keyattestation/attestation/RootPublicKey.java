@@ -22,6 +22,7 @@ public class RootPublicKey {
         GOOGLE,
         GOOGLE_RKP,
         KNOX,
+        OMMEGA,
         OEM,
     }
 
@@ -38,6 +39,22 @@ public class RootPublicKey {
             gLiMm0jhO2B6tUXHI/+MRPjy02i59lINMRRev56GKtcd9qO/0kUJWdZTdA2XoS82\
             ixPvZtXQpUpuL12ab+9EaDK8Z4RHJYYfCT3Q5vNAXaiWQ+8PTWm2QgBR/bkwSWc+\
             NpUFgNPN9PvQi8WEg5UmAGMCAwEAAQ==""";
+
+    // Ommega 硬件认证密钥的根：DN 是 serialNumber=f92009e853b6b045，RSA 4096，20 年，
+    // 签的时候由它签 TEE 中间 CA，中间再签设备证书，链跟真机工厂密钥一样是三层。
+    private static final String OMMEGA_ROOT_PUBLIC_KEY = """
+            MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAwJIKnYlevLo3Gl6sbGPQ\
+            i+HkLyJEfDRWP/pwQqjZNhHECkm/xlHmOfbP1u9oX5T+VrmfnJlC9yYSvFvWwTC7\
+            TZ6xsgeQoT2XgShav9Qs303meo+/ICjoBF6E2PNBLy+xPfZC5yZQYNi4nq3/FXkj\
+            ebQcOg8AXPfkUoAGZV/ZQIo9ef5Fxs7AMGExTRGVUa+xyjDhUqy0g5eqrJdkgidh\
+            wWxVmdOkRRDizXv95XldWj09AEU1UAztLLpGGTcGKHt9WN70qBMCTBQ8heI7Ed+M\
+            mpIq/4cHMcH4zCC/Q2NjhubUWFw5tksW8wFfSswMNdGdF6qNBF3zYGSA9gbbcUx7\
+            phnS45SdJjQNGbl6i+tsLD4WcRuA0vsQT462+POtJL3PfiIJNmsiH1MktrRxVdfQ\
+            RpzRP1GXvAOMN+tANsvBEF3Lx3clYxOdsyGFcvmFPJPg/y6fJgdRnEj7zVLAjvvB\
+            /IA2C60qMdqj6uAjnemwWgws1CHQg4cba+jJvfMrEcCUXMlpnzk9N8nsBlG0vbdP\
+            003b3TLWyoK9v1jQ/TXiIgVxetxY1UCWdTLCnp9jzPxCF6kpkeAmLfA7aH+Fg7zs\
+            tndPcX8u19u9Rtk6NWuqdsjj8qeCML7oc3DN6Z2VcF8c+vrPMUzpWbXE+MmfoIya\
+            4ZrKmZ+iA+tkEcgQsqgkjbECAwEAAQ==""";
 
     // Google 2025-07 启用的 RKP 根，CN=Key Attestation CA1（EC P-384），链上常见形式是
     // Key Attestation CA1 -> Droid CA2/CA3 -> TEE 证书。公钥取自 Google 官方文档的
@@ -77,6 +94,7 @@ public class RootPublicKey {
 
     private static final byte[] googleKey = Base64.decode(GOOGLE_ROOT_PUBLIC_KEY, 0);
     private static final byte[] googleRkpKey = Base64.decode(GOOGLE_RKP_ROOT_PUBLIC_KEY, 0);
+    private static final byte[] ommegaKey = Base64.decode(OMMEGA_ROOT_PUBLIC_KEY, 0);
     private static final byte[] aospEcKey = Base64.decode(AOSP_ROOT_EC_PUBLIC_KEY, 0);
     private static final byte[] aospRsaKey = Base64.decode(AOSP_ROOT_RSA_PUBLIC_KEY, 0);
     private static final byte[] knoxSakv1Key = Base64.decode(KNOX_SAKV1_ROOT_PUBLIC_KEY, 0);
@@ -109,7 +127,8 @@ public class RootPublicKey {
         }
         // 厂商列表里可能也塞了 Google 的根，剔掉免得被当 OEM
         set.removeIf(key -> Arrays.equals(key.getEncoded(), googleKey)
-                || Arrays.equals(key.getEncoded(), googleRkpKey));
+                || Arrays.equals(key.getEncoded(), googleRkpKey)
+                || Arrays.equals(key.getEncoded(), ommegaKey));
         if (set.isEmpty()) {
             return null;
         }
@@ -133,6 +152,8 @@ public class RootPublicKey {
             return Status.KNOX;
         } else if (Arrays.equals(publicKey, knoxSakmv1Key)) {
             return Status.KNOX;
+        } else if (Arrays.equals(publicKey, ommegaKey)) {
+            return Status.OMMEGA;
         } else if (oemKeys != null) {
             for (var key : oemKeys) {
                 if (Arrays.equals(publicKey, key.getEncoded())) {

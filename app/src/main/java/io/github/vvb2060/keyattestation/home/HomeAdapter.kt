@@ -77,6 +77,13 @@ class HomeAdapter(listener: Listener) : IdBasedRecyclerViewAdapter() {
                         R.drawable.ic_trustworthy_24,
                         rikka.material.R.attr.colorSafe), ID_CERT_STATUS)
             }
+            RootPublicKey.Status.OMMEGA -> {
+                addItem(HeaderViewHolder.CREATOR, HeaderData(
+                        R.string.ommega_root_cert,
+                        R.string.ommega_root_cert_summary,
+                        R.drawable.ic_trustworthy_24,
+                        rikka.material.R.attr.colorSafe), ID_CERT_STATUS)
+            }
             RootPublicKey.Status.OEM -> {
                 addItem(HeaderViewHolder.CREATOR, HeaderData(
                         R.string.oem_root_cert,

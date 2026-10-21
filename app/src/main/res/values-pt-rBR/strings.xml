@@ -37,6 +37,8 @@
     <string name="google_root_cert_rkp_summary">A chave de atestado provisionada remotamente tem maior segurança e maior disponibilidade.</string>
     <string name="knox_root_cert">Certificado root de atestado do Samsung Knox</string>
     <string name="knox_root_cert_summary">O atestado Knox é assinado usando a chave de atestado Samsung (SAK).</string>
+    <string name="ommega_root_cert">Certificado root de atestação de hardware Ommega</string>
+    <string name="ommega_root_cert_summary">As chaves de atestação emitidas pela Ommega são assinadas por este certificado root.</string>
     <string name="oem_root_cert">Certificado root OEM</string>
     <string name="oem_root_cert_summary">Este dispositivo confia neste certificado root, mas pode não ser confiável para outras pessoas.</string>
 

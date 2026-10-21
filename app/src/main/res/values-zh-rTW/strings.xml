@@ -37,6 +37,8 @@
     <string name="google_root_cert_rkp_summary">遠端配置的認證金鑰有更強的安全性和更高的可用性。</string>
     <string name="knox_root_cert">三星 Knox 認證的根憑證</string>
     <string name="knox_root_cert_summary">Knox 認證使用三星認證金鑰（SAK）簽章。</string>
+    <string name="ommega_root_cert">Ommega 硬體證明根憑證</string>
+    <string name="ommega_root_cert_summary">由 Ommega 簽發的證明金鑰使用此根憑證簽章。</string>
     <string name="oem_root_cert">裝置製造商的根憑證</string>
     <string name="oem_root_cert_summary">此裝置信任此根憑證，但它可能不被其它人信任。</string>
 
